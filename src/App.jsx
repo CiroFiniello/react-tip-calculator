@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/* eslint-disable react/prop-types */
+import { useState } from "react";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [valore, setValore] = useState();
+  const [percentuale1, setPercentuale1] = useState(0);
+  const [percentuale2, setPercentuale2] = useState(0);
+  const tip = valore * ((percentuale1 + percentuale2) / 2 / 100);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Costo onSetValore={setValore} />
+      <Servizio
+        domanda="Quanto ti è piaciuto il servizio?"
+        onSetPercentuale={setPercentuale1}
+      />
+      <Servizio
+        domanda="Quanto è piaicuto al tuo amico il servizio?"
+        onSetPercentuale={setPercentuale2}
+      />
+      <Risposta valore={valore} tip={tip} />
+    </div>
+  );
+}
+function Costo({ onSetValore }) {
+  // const [costo, setCosto] = useState();
+
+  return (
+    <form className="costo">
+      <h3>Quaal è il costo?</h3>
+      <input
+        type="text"
+        name="costo"
+        placeholder="..."
+        onChange={(e) => onSetValore(Number(e.target.value))}
+      />
+    </form>
+  );
 }
 
-export default App
+function Servizio({ domanda, onSetPercentuale }) {
+  return (
+    <div className="costo">
+      <h3>{domanda}</h3>
+      <select
+        defaultValue={0}
+        onChange={(e) => onSetPercentuale(Number(e.target.value))}
+      >
+        <option value="0">Non soddisfatto(0%)</option>
+        <option value="5">è okay(5%)</option>
+        <option value="10">era buono(10%)</option>
+        <option value="20">Amazing!(20%)</option>
+      </select>
+    </div>
+  );
+}
+
+function Risposta({ valore, tip }) {
+  if (!valore) return;
+  return (
+    <div>
+      <h1>tu paghi {valore + tip}</h1>
+      <h3>
+        ( di cui il costo iniziale {valore} + {tip} di mancia )
+      </h3>
+    </div>
+  );
+}
+export default App;
